@@ -34,8 +34,9 @@
                                                  :str2 lowercase-a-z?}}
                             :responses  {200 {:body {:scramble? boolean?}}}
                             :handler    (fn [{{{:keys [str1 str2]} :query} :parameters}]
-                                          {:status 200
-                                           :body   {:scramble? (scramble? str1 str2)}})}}]
+                                          {:status  200
+                                           :headers {"Access-Control-Allow-Origin" "*"}
+                                           :body    {:scramble? (scramble? str1 str2)}})}}]
         {:data {:coercion   rspec/coercion
                 :middleware [coercion/coerce-exceptions-middleware
                              coercion/coerce-request-middleware
