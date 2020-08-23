@@ -28,19 +28,19 @@
 
 
 (def ^:private router
-   (ring/ring-handler
-      (ring/router
-        ["/scramble" {:get {:parameters {:query {:str1 lowercase-a-z?
-                                                 :str2 lowercase-a-z?}}
-                            :responses  {200 {:body {:scramble? boolean?}}}
-                            :handler    (fn [{{{:keys [str1 str2]} :query} :parameters}]
-                                          {:status  200
-                                           :headers {"Access-Control-Allow-Origin" "*"}
-                                           :body    {:scramble? (scramble? str1 str2)}})}}]
-        {:data {:coercion   rspec/coercion
-                :middleware [coercion/coerce-exceptions-middleware
-                             coercion/coerce-request-middleware
-                             coercion/coerce-response-middleware]}})))
+  (ring/ring-handler
+    (ring/router
+      ["/scramble" {:get {:parameters {:query {:str1 lowercase-a-z?
+                                               :str2 lowercase-a-z?}}
+                          :responses  {200 {:body {:scramble? boolean?}}}
+                          :handler    (fn [{{{:keys [str1 str2]} :query} :parameters}]
+                                        {:status  200
+                                         :headers {"Access-Control-Allow-Origin" "*"}
+                                         :body    {:scramble? (scramble? str1 str2)}})}}]
+      {:data {:coercion   rspec/coercion
+              :middleware [coercion/coerce-exceptions-middleware
+                           coercion/coerce-request-middleware
+                           coercion/coerce-response-middleware]}})))
 
 
 (defn ^:private wrap-empty-response
@@ -59,13 +59,13 @@
 (defn -main
   "starts the server on a given :port (default 8080)"
   [& {:keys [port]
-      :or {port 8080}}]
+      :or   {port 8080}}]
   (jetty/run-jetty
     (-> #'router
         wrap-json-response
         wrap-empty-response
         wrap-params)
-    {:port port
+    {:port  port
      :join? false}))
 
 ;; development REPL snippets
