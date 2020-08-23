@@ -7,6 +7,10 @@
             [ring.adapter.jetty :as jetty])
   (:gen-class))
 
+;; NOTE: I have added a much faster version of the function in the `scramblies.experiment` namespace.
+;;       I did not use it here, because it requires a bit more code and is a bit less clear as a result.
+;;       Benchmark results for both versions of the function are at the bottom of the namespace.
+
 (defn ^:private scramble?
   "returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false"
   [str1 str2]
