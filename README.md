@@ -1,4 +1,4 @@
-# Scramblies challenge
+![](https://puu.sh/Glggr/465da8cfd9.png)
 
 This repository contains my solutions to the following tasks:
 
