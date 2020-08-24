@@ -1,5 +1,5 @@
 (ns scramblies.experiment
-  (:import [java.util HashMap Map]
+  (:import [java.util HashMap Map BitSet]
            [java.util.function BiFunction]))
 
 ;; ORIGINAL VERSION ;;
@@ -47,7 +47,7 @@
 
 ;; JAVA HASHMAP VERSION ;;
 
-(defn scramble?-2
+(defn scramble?-hashmap
   "returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false"
   [str1 str2]
   (boolean
@@ -55,6 +55,37 @@
       (loop [[c & remaining] str2]
         (or (nil? c)
             (and (<= 0 (.compute available-char-counts c safe-dec))
+                 (recur remaining)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn ^:private next-unused-char-index
+  "Returns the next index for the character in the String
+  which has not yet been used according to the used-chars BitSet."
+  [^String s
+   ^BitSet used-chars
+   character
+   ^long start-index]
+  (let [i (.indexOf s (int character) start-index)]
+    (when (> i -1)
+      (if-not (.get used-chars i)
+        i
+        (recur s used-chars character (inc i))))))
+
+;; BITSET VERSION ;;
+
+(defn scramble?-bitset
+  "returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false"
+  [str1 str2]
+  (boolean
+    (let [used-chars (BitSet. (count str1))]
+      (loop [[c & remaining] str2]
+        (or (nil? c)
+            (and (when-let [i (next-unused-char-index str1 used-chars c 0)]
+                   (.set used-chars i)
+                   true)
                  (recur remaining)))))))
 
 
@@ -84,7 +115,7 @@
   ;                   Overhead used : 6,772466 ns
 
   (bench
-    (scramble?-2 "multiplecharactersneeded" "arachnid"))
+    (scramble?-hashmap "multiplecharactersneeded" "arachnid"))
   ; Evaluation count : 59692500 in 60 samples of 994875 calls.
   ;             Execution time mean : 1,001869 µs
   ;    Execution time std-deviation : 7,001678 ns
@@ -93,12 +124,30 @@
   ;                   Overhead used : 6,772466 ns
 
   (bench
-    (scramble?-2 "multiplecharactersneeded" "multiplecharactersneeded"))
+    (scramble?-hashmap "multiplecharactersneeded" "multiplecharactersneeded"))
   ; Evaluation count : 41779620 in 60 samples of 696327 calls.
   ;             Execution time mean : 1,435406 µs
   ;    Execution time std-deviation : 8,367757 ns
   ;   Execution time lower quantile : 1,427676 µs ( 2,5%)
   ;   Execution time upper quantile : 1,458829 µs (97,5%)
   ;                   Overhead used : 6,772466 ns
+
+  (bench
+    (scramble?-bitset "multiplecharactersneeded" "arachnid"))
+  ; Evaluation count : 168131640 in 60 samples of 2802194 calls.
+  ;             Execution time mean : 349,116209 ns
+  ;    Execution time std-deviation : 2,110576 ns
+  ;   Execution time lower quantile : 346,329688 ns ( 2,5%)
+  ;   Execution time upper quantile : 353,372776 ns (97,5%)
+  ;                   Overhead used : 6,787013 ns
+
+  (bench
+    (scramble?-bitset "multiplecharactersneeded" "multiplecharactersneeded"))
+  ; Evaluation count : 69266040 in 60 samples of 1154434 calls.
+  ;             Execution time mean : 906,237926 ns
+  ;    Execution time std-deviation : 5,364701 ns
+  ;   Execution time lower quantile : 896,430496 ns ( 2,5%)
+  ;   Execution time upper quantile : 918,252260 ns (97,5%)
+  ;                   Overhead used : 6,787013 ns
 
   )
