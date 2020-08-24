@@ -46,6 +46,8 @@ I chose to convert the available-characters map to a `transient`, in order to ma
 
 I have also added [another possible implementation](https://github.com/NPException/scramblies/blob/master/src/scramblies/experiment.clj#L50-L58) in the `scramblies.experiment` namespace, which is a lot quicker. But to achieve that I reimplemented `frequencies` with a regular Java `HashMap`. Benchmarking results are at the bottom of that namespace.
 
+*[Edit]* After talking about the challenge with a friend, he decided to implement the function in Rust as an excercise. He was using a BitSet to keep track of the characters of the first String that had already been used. I was curious how fast the equivalent code in Clojure would be, so I added it as [a third implementation](https://github.com/NPException/scramblies/blob/master/src/scramblies/experiment.clj#L79-L89) and added benchmark results in the namespace as well.
+
 ### Task 2
 
 I decided to use Jetty as a server, with a combination of [**reitit**](https://github.com/metosin/reitit) and some Ring middleware to do the routing and request/response parsing.
@@ -58,7 +60,8 @@ Last but not least, [starting the server](https://github.com/NPException/scrambl
 
 ### Task 3
 
-This was an interesting task, since I had not done anything with ClojureScript before. I had heard of [**Figwheel**](https://figwheel.org/) and [**re-frame**](https://github.com/day8/re-frame) before, so I decided to start my CS journey with those. I looked up some getting started guides for both, and build my UI by iterating on some example code until it fit the task. In order to have something that is not just plain HTML, I used [**mvp.css**](https://andybrewer.github.io/mvp/).
+This was an interesting task, since I had not done anything with ClojureScript before.  
+I had heard of [**Figwheel**](https://figwheel.org/) and [**re-frame**](https://github.com/day8/re-frame) before, so I decided to start my CS journey with those. I looked up some getting started guides for both, and built my UI by iterating on some example code until it did what I wanted. In order to have something that is not just plain HTML, I used [**mvp.css**](https://andybrewer.github.io/mvp/).
 
 The final UI consists of the [HTML skeleton](https://github.com/NPException/scramblies/blob/master/resources/public/index.html) and [some ClojureScript code](https://github.com/NPException/scramblies/blob/master/src/scramblies/page.cljs).
 
