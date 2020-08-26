@@ -11,7 +11,9 @@
                  [cljs-http "0.1.46"]]
   :main ^:skip-aot scramblies.core
   :target-path "target/%s"
-  :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main" "--" "-b" "dev" "-r"]}
+  :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]
+            "fig-dev" ["fig" "-b" "dev" "-r"]
+            "fig-build" ["fig" "-bo" "prod"]}
   :profiles {:uberjar {:aot :all}
              :dev {:dependencies [[criterium "0.4.5"]]
                    :resource-paths ["target"]
